@@ -42,7 +42,26 @@ class Login extends Component {
           });
       }
 
-      /* TODO: Cognito integration */
+      try
+      {
+          const user = await Auth.signIn(this.state.username, this.state.password);
+          console.log(user);
+          this.props.authObj.setAuthStatus(true);
+          this.props.authObj.setUser(user);
+          this.props.history.push('/');
+      }
+      catch(error)
+      {
+          let err = null;
+          !error.message ? err = {"message": error} : err = error; /* ensuring error is in proper format */
+          this.setState({
+              errors:
+              {
+                  ...this.state.errors, /* preserve current errors */
+                  cognito: err
+              }
+          })
+      }
     };
 
     /* on input change, remove the targeted field from the list of 'bad' values */
@@ -92,15 +111,11 @@ class Login extends Component {
                   />
               </div>
               <div className="field">
-                <p className="control">
-                  <a href="/forgotpassword">Forgot password?</a>
-                </p>
+                <p className="control"><a href="/forgotpassword">Forgot password?</a></p>
               </div>
               <div className="field">
                 <p className="control">
-                  <button className="btn btn-dark">
-                    login
-                  </button>
+                  <button className="btn btn-dark">login</button>
                 </p>
               </div>
             </form>

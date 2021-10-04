@@ -11,8 +11,20 @@ export default class Home extends Component {
                         <h1 className="display-4">Citadel Cards are here</h1>
                         <p className="lead">The wait is over. The only business card you'll ever need is waiting to be made.</p>
                         <hr className="my-4" />
-                        <p>Sign in to get started</p>
-                        <a className="btn btn-primary btn-lg" href="" role="button">Sign in</a>
+                        
+                    { !this.props.authObj.isAuthenticated &&
+                    (
+                        <div>
+                            <p>Sign in to get started</p>
+                            <a className="btn btn-primary btn-lg" href="/login" role="button">Sign in</a>
+                        </div>
+                    )}
+
+                    {this.props.authObj.isAuthenticated && this.props.authObj.user &&
+                    (
+                        <a className="btn btn-primary btn-lg" href="/generate" role="button">Generate Now</a>
+                    )}
+
                     </div>
                     </div>
                 </div>
