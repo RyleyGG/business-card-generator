@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import FormErrors from "../utility/FormErrors";
 import Validate from "../utility/FormValidation";
+import { Auth } from "aws-amplify";
+import { AuthErrorStrings } from '@aws-amplify/auth';
+
 
 class Login extends Component {
     state = 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import FormErrors from "../utility/FormErrors";
 import Validate from "../utility/FormValidation";
+import { Auth } from "aws-amplify";
+import { AuthErrorStrings } from '@aws-amplify/auth';
 
 class Register extends Component {
     state = 
@@ -43,7 +45,33 @@ class Register extends Component {
             });
         }
 
-        /* TODO: Cognito integration */
+        const { username, email, password } = this.state;
+        try
+        {
+            const registerResponse = await Auth.signUp({
+                username,
+                password,
+                attributes:
+                {
+                    email: email
+                }
+            });
+
+            console.log(registerResponse);
+            this.props.history.push('/welcome');
+        }
+        catch(error)
+        {
+            let err = null;
+            !error.message ? err = {"message": error} : err = error; /* ensuring error is in proper format */
+            this.setState({
+                errors:
+                {
+                    ...this.state.errors, /* preserve current errors */
+                    cognito: err
+                }
+            })
+        }
     };
 
     /* on input change, remove the targeted field from the list of 'bad' values */
