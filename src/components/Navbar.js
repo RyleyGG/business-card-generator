@@ -3,11 +3,20 @@ import React, { Component, Fragment } from 'react';
 
 export default class Navbar extends Component {
 
-    signOut = () =>
+    signOut = async event =>
     {
-        Auth.signOut();
-        this.props.authObj.setAuthStatus(true);
-        this.props.authObj.setUser(null);
+        event.preventDefault();
+        try
+        {
+            Auth.signOut();
+            this.props.authObj.setAuthStatus(false);
+            this.props.authObj.setUser(null);
+
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
     }
 
     render()
@@ -25,7 +34,7 @@ export default class Navbar extends Component {
                         </li>
 
                         <li className="nav-item">
-                            <a className="nav-link" href="">Generate!</a>
+                            <a className="nav-link" href="/Generate">Generate!</a>
                         </li>
                     </ul>
 
