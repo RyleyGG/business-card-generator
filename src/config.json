@@ -1,0 +1,12 @@
+{
+    "cognito": 
+    { 
+        "REGION": "us-east-1",
+        "USER_POOL_ID": "us-east-1_TPIlB5AeJ",
+        "APP_CLIENT_ID": "2p0m9f0k4sbhhn3mb338uokd63"
+    },
+    "api":
+    {
+        "invokeUrl": "https://woltzw87ib.execute-api.us-east-1.amazonaws.com/staging"
+    }
+  }
