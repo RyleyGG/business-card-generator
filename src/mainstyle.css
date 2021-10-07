@@ -1,3 +1,8 @@
+*
+{
+    font-family: Arial, Helvetica, sans-serif
+}
+
 body
 {
     background-color: #ededed;
@@ -10,5 +15,10 @@ nav, .navbar-collapse, .nav-item
 
 .badValue
 {
-    border-color: red;
+    border-color: red !important;
+}
+
+.container .formgroup
+{
+    margin-bottom: 1.55vh;
 }

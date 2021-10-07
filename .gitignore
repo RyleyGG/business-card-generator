@@ -49,3 +49,7 @@ amplify/backend/backend-config.json
 amplify/backend/tags.json
 amplify/cli.json
 amplify/team-provider-info.json
+package-lock.json
+package.json
+package.json
+amplify/backend

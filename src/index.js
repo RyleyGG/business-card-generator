@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import Amplify from 'aws-amplify';
-import config from './config';
+import awsExports from "./aws-exports";
 
-
+/*
 Amplify.configure({
     Auth:
     {
@@ -15,6 +15,9 @@ Amplify.configure({
         userPoolWebClientId: config.cognito.APP_CLIENT_ID
     }
 });
+*/
+
+Amplify.configure(awsExports);
 
 
 ReactDOM.render(<React.StrictMode> <App /> </React.StrictMode>, document.getElementById('root'));

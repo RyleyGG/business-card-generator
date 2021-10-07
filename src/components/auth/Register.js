@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import FormErrors from "../utility/FormErrors";
 import Validate from "../utility/FormValidation";
 import { Auth } from "aws-amplify";
-import { AuthErrorStrings } from '@aws-amplify/auth';
 
 class Register extends Component {
     state = 
@@ -48,7 +47,7 @@ class Register extends Component {
         const { username, email, password } = this.state;
         try
         {
-            const registerResponse = await Auth.signUp({
+            await Auth.signUp({
                 username,
                 password,
                 attributes:
@@ -57,7 +56,6 @@ class Register extends Component {
                 }
             });
 
-            console.log(registerResponse);
             this.props.history.push('/welcome');
         }
         catch(error)
@@ -86,82 +84,73 @@ class Register extends Component {
     render() 
     {
         return (
-        <section className="auth">
             <div className="container">
-            <br/>
-            <h1>Register</h1>
-            <FormErrors formerrors={this.state.errors} />
-
-            <form onSubmit={this.handleSubmit}>
-
-                {/* username submit */}
-                <div className="field">
-                    <input 
-                    className="input" 
-                    type="text"
-                    id="username"
-                    aria-describedby="userNameHelp"
-                    placeholder="Enter username"
-                    value={this.state.username}
-                    onChange={this.onInputChange}
-                    />
-                </div>
-
                 <br/>
+                <h1>Register</h1>
+                <FormErrors formerrors={this.state.errors} />
 
-                {/* email submit */}
-                <div className="field">
-                    <input 
-                    className="input" 
-                    type="email"
-                    id="email"
-                    aria-describedby="emailHelp"
-                    placeholder="Enter email"
-                    value={this.state.email}
-                    onChange={this.onInputChange}
-                    />
-                </div>
+                <form onSubmit={this.handleSubmit}>
 
-                <br/>
+                    <br/>
+                    
+                    {/* username submit */}
+                    <div className = 'formgroup'>
+                        <label for="username">Username</label>
+                        <input 
+                        className="input form-control" 
+                        type="text"
+                        id="username"
+                        aria-describedby="userNameHelp"
+                        placeholder="Enter username"
+                        value={this.state.username}
+                        onChange={this.onInputChange}
+                        />
+                    </div>
 
-                {/* password submit */}
-                <div className="field">
-                    <input 
-                    className="input" 
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    value={this.state.password}
-                    onChange={this.onInputChange}
-                    />
-                </div>
+                    {/* email submit */}
+                    <div className = 'formgroup'>
+                        <label for="email">Email</label>
+                        <input 
+                        className="input form-control" 
+                        type="email"
+                        id="email"
+                        aria-describedby="emailHelp"
+                        placeholder="Enter email"
+                        value={this.state.email}
+                        onChange={this.onInputChange}
+                        />
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
 
-                <br/>
+                    {/* password submit */}
+                    <div className = 'formgroup'>
+                        <label for="password">Password</label>
+                        <input 
+                        className="input form-control" 
+                        type="password"
+                        id="password"
+                        placeholder="Enter Password"
+                        value={this.state.password}
+                        onChange={this.onInputChange}
+                        />
+                    </div>
 
-                {/* confirm password submit */}
-                <div className="field">
-                    <input 
-                    className="input" 
-                    type="password"
-                    id="confirmpassword"
-                    placeholder="Confirm password"
-                    value={this.state.confirmpassword}
-                    onChange={this.onInputChange}
-                    />
-                </div>
+                    {/* confirm password submit */}
+                    <div className = 'formgroup'>
+                        <label for="confirmpassword">Confirm Password</label>
+                        <input 
+                        className="input form-control" 
+                        type="password"
+                        id="confirmpassword"
+                        placeholder="Confirm password"
+                        value={this.state.confirmpassword}
+                        onChange={this.onInputChange}
+                        />
+                    </div>
 
-                <br/>
-
-                <div className="field">
-                <p className="control">
-                    <button className="button is-success">
-                    Register
-                    </button>
-                </p>
-                </div>
-            </form>
+                    <button className="btn btn-primary">Register</button>
+                </form>
             </div>
-        </section>
         );
     }
 }

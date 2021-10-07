@@ -11,6 +11,7 @@ export default class Navbar extends Component {
             Auth.signOut();
             this.props.authObj.setAuthStatus(false);
             this.props.authObj.setUser(null);
+            this.props.authObj.setIsAdmin(false);
 
         }
         catch(error)
@@ -28,21 +29,14 @@ export default class Navbar extends Component {
                         <li className="nav-item active">
                             <a className="navbar-brand" href="/" style={{fontWeight: 'bold'}}>Citadel Cards</a>
                         </li>
-                        
-                        <li className="nav-item active">
-                            <a className="nav-link" href="/">Home</a>
-                        </li>
-
-                        <li className="nav-item">
-                            <a className="nav-link" href="/Generate">Generate!</a>
-                        </li>
                     </ul>
 
-                    { this.props.authObj.isAuthenticated && this.props.authObj.user &&
+                    { /* if logged in and administrator */ }
+                    { this.props.authObj.isAuthenticated && this.props.authObj.user && this.props.authObj.isAdmin &&
                     (
                         <ul className="nav justify-content-end list-unstyled">
                             <li className="nav-item">
-                                <p>Logged in as: {this.props.authObj.user.username}</p>
+                                <a className="btn btn-outline-danger" href="/adminview" role="button">Admin View</a>
                             </li>
 
                             <li className="nav-item">
@@ -57,6 +51,23 @@ export default class Navbar extends Component {
                         </ul>
                     )}
 
+                    { /* if logged in and normal customer */ }
+                    { this.props.authObj.isAuthenticated && this.props.authObj.user && !this.props.authObj.isAdmin &&
+                    (
+                        <ul className="nav justify-content-end list-unstyled">
+                            <li className="nav-item">
+                                <a className="btn btn-link" href="/editprofile" role="button">Edit Profile</a>
+                            </li>
+
+                            <li className="nav-item">
+                                <a className="btn btn-link" href="/" role="button"
+                                onClick={this.signOut}>
+                                Sign out</a>
+                            </li>
+                        </ul>
+                    )}
+
+                    { /* if not logged in at all */ }
                     { !this.props.authObj.isAuthenticated &&
                     (
                         <ul className="nav justify-content-end list-unstyled">

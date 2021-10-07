@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import FormErrors from "../utility/FormErrors";
 import Validate from "../utility/FormValidation";
 import { Auth } from "aws-amplify";
-import { AuthErrorStrings } from '@aws-amplify/auth';
 
 
 class Login extends Component {
@@ -45,7 +44,6 @@ class Login extends Component {
       try
       {
           const user = await Auth.signIn(this.state.username, this.state.password);
-          console.log(user);
           this.props.authObj.setAuthStatus(true);
           this.props.authObj.setUser(user);
           this.props.history.push('/');
@@ -75,52 +73,43 @@ class Login extends Component {
 
     render() 
     {
-      return (
-        <section className="auth">
-          <div className="container">
-            <br/>
-            <h1>Log In</h1>
-            <FormErrors formerrors={this.state.errors} />
+        return (
+            <div className="container">
+                <br/>
+                <h1>Log In</h1>
+                <FormErrors formerrors={this.state.errors} />
 
-            <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit}>
+                    
+                    {/* Username input */}
+                    <div className="formgroup">
+                        <input 
+                        className="input form-control" 
+                        type="text"
+                        id="username"
+                        aria-describedby="usernameHelp"
+                        placeholder="Enter username or email"
+                        value={this.state.username}
+                        onChange={this.onInputChange}
+                        />
+                    </div>
 
-              {/* Username input */}
-              <div className="field">
-                  <input 
-                    className="input" 
-                    type="text"
-                    id="username"
-                    aria-describedby="usernameHelp"
-                    placeholder="Enter username or email"
-                    value={this.state.username}
-                    onChange={this.onInputChange}
-                  />
-              </div>
-
-              <br/>
-
-              {/* Password input */}
-              <div className="field">
-                  <input 
-                    className="input" 
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    value={this.state.password}
-                    onChange={this.onInputChange}
-                  />
-              </div>
-              <div className="field">
-                <p className="control"><a href="/forgotpassword">Forgot password?</a></p>
-              </div>
-              <div className="field">
-                <p className="control">
-                  <button className="btn btn-dark">login</button>
-                </p>
-              </div>
-            </form>
-          </div>
-        </section>
+                    {/* Password input */}
+                    <div className="formgroup">
+                        <input 
+                        className="input form-control" 
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        value={this.state.password}
+                        onChange={this.onInputChange}
+                        />
+                        <a href="/forgotpassword">Forgot password?</a>
+                    </div>
+                
+                    <button className="btn btn-primary">Login</button>
+                </form>
+            </div>
       );
     }
 }

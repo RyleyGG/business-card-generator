@@ -1,6 +1,6 @@
 /* react elements / other packages */
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 
 /* components */
@@ -14,6 +14,8 @@ import EditProfile from './components/EditProfile';
 import ForgotPassword from './components/auth/ForgotPassword';
 import Verify from './components/auth/Verify';
 import Confirm from './components/auth/Confirm';
+import ChangePassword from './components/auth/ChangePassword';
+import AdminView from './components/AdminView';
 
 /* style sheets */
 import './mainstyle.css';
@@ -24,7 +26,8 @@ class App extends Component {
     {
         isAuthenticated: false,
         isAuthenticating: true,
-        user: null
+        user: null,
+        isAdmin : false
     }
 
 
@@ -39,16 +42,24 @@ class App extends Component {
         this.setState({user: user });
     }
 
+    setAdminStatus = adminStatusBool =>
+    {
+        this.setState({isAdmin: adminStatusBool });
+    }
+
     /* allows for session persistence */
     async componentDidMount()
     {
         try
         {
-            const session = await Auth.currentSession();
             const user = await Auth.currentAuthenticatedUser();
+            if (user.signInUserSession.accessToken.payload["cognito:groups"][0] === 'Administrators')
+            {
+                this.setAdminStatus(true);
+            }
+
             this.setAuthStatus(true);
             this.setUser(user);
-            console.log(session);
         }
         catch(error)
         {
@@ -64,8 +75,10 @@ class App extends Component {
         {
             isAuthenticated: this.state.isAuthenticated,
             user: this.state.user,
+            isAdmin: this.state.isAdmin,
             setAuthStatus: this.setAuthStatus,
-            setUser: this.setUser
+            setUser: this.setUser,
+            setAdminStatus: this.setAdminStatus
         }
 
         return (
@@ -74,6 +87,9 @@ class App extends Component {
                 {/* Bootstrap and jquery */}
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossOrigin="anonymous" />
                 <link rel="stylesheet" href="mainstyle.css" />
+                
+                {/* JS Datatable */}
+                <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.3/sc-2.0.5/sp-1.4.0/sl-1.3.3/datatables.min.css"/>
 
                 <Router>
                     <Navbar authObj = { authObj }/>
@@ -86,6 +102,8 @@ class App extends Component {
                     <Route exact path="/forgotpassword" render={(props) => <ForgotPassword { ...props } authObj= { authObj } />} />
                     <Route exact path="/verify" render={(props) => <Verify { ...props } authObj= { authObj } />} />
                     <Route exact path="/confirm" render={(props) => <Confirm { ...props } authObj= { authObj } />} />
+                    <Route exact path="/changepassword" render={(props) => <ChangePassword { ...props } authObj= { authObj } />} />
+                    <Route exact path="/adminview" render={(props) => <AdminView { ...props } authObj= { authObj } />} />
                 </Router>
             
             </div>
