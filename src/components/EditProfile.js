@@ -70,7 +70,7 @@ class EditProfile extends Component {
                     />
                 </div>
                 
-                {/* Username input */}
+                {/* Username input, just for display */}
                 <div className="formgroup" id = 'usernameFormGroup'>
                     <label htmlFor="username">Username</label>
                     <input 

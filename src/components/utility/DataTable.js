@@ -51,7 +51,8 @@ export class DataTable extends Component
             ],
             paging: false,
             deferRender: true,
-            scroller: true
+            scroller: true,
+            cache: false
         }
         )
     }
