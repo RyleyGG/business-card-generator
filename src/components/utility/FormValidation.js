@@ -9,6 +9,12 @@ function validateForm(event, state) {
         }
     }
   
+    if (state.hasOwnProperty("email") && state.email === "") 
+    {
+        document.getElementById("email").classList.add("badValue");
+        return { blankfield: true };
+    }
+
     if (state.hasOwnProperty("username") && state.username === "") 
     {
         document.getElementById("username").classList.add("badValue");
@@ -24,12 +30,6 @@ function validateForm(event, state) {
     if (state.hasOwnProperty("lastname") && state.lastname === "") 
     {
         document.getElementById("lastname").classList.add("badValue");
-        return { blankfield: true };
-    }
-
-    if (state.hasOwnProperty("email") && state.email === "") 
-    {
-        document.getElementById("email").classList.add("badValue");
         return { blankfield: true };
     }
 

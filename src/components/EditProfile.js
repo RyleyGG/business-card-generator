@@ -1,4 +1,10 @@
 import React, { Component } from 'react';
+import axios from "axios";
+import FormErrors from "./utility/FormErrors";
+import Validate from "./utility/FormValidation";
+const $ = require('jquery');
+
+const config = require('../config.json');
 
 
 class EditProfile extends Component {
@@ -12,7 +18,52 @@ class EditProfile extends Component {
     /* handles form submission */
     handleSubmit = async event => 
     {
-      event.preventDefault(); /* prevents page resubmission */
+        event.preventDefault();
+        
+        try
+        {
+
+            const params =
+            {
+                "email": this.state.email,
+                "username": this.state.username,
+                "fullname": $("#fullname").val(),
+                "birthday": $("#birthday").val(),
+                "job_title": $("#jobtitle").val(),
+                "employer": $("#employer").val(),
+                "city": $("#city").val(),
+                "phone_number": $("#phonenumber").val()
+            }
+            
+            try
+            {
+                const response = await axios.patch(`${config.api.invokeUrl}/users/${this.state.email}`, params);
+
+                if (response.status === 204)
+                {
+                    $("#submitBtn").off(); /* prevents events from stacking */
+                    $("#successText").text("User successfully updated.");
+                    $("#successText").show();
+                }
+                else
+                {
+                    $("#errorText").text("There was an error with this request.");
+                    $("#errorText").show();
+                }
+                $("#submitBtn").off(); /* prevents events from stacking */
+            }
+            catch(error)
+            {
+                $("#errorText").text("User with this information doesn't exist");
+                $("#errorText").show();
+            }
+        }
+        catch(error)
+        {
+            $("#errorText").text(error);
+            $("#errorText").show();
+            console.log(error);
+        }
     }
     
     redirectUnauthorizedUsers = event =>
@@ -54,6 +105,9 @@ class EditProfile extends Component {
                 <h1>Profile Details</h1>
                 <br/>
 
+                <p id = 'errorText' className = "font-weight-bold text-danger" style={{display: 'none'}}></p>
+                <p id = 'successText' className = "font-weight-bold text-success" style={{display: 'none'}}></p>
+                <br/>
                 <form onSubmit={this.handleSubmit}>
 
                 {/* Email input, just for display */}
@@ -71,7 +125,7 @@ class EditProfile extends Component {
                 </div>
                 
                 {/* Username input, just for display */}
-                <div className="formgroup" id = 'usernameFormGroup'>
+                <div className="formgroup" id = 'usernameFormGroup' style={{display: 'none'}}>
                     <label htmlFor="username">Username</label>
                     <input 
                     className="input form-control" 

@@ -4,6 +4,7 @@ import Validate from "../utility/FormValidation";
 import { Auth } from "aws-amplify";
 
 class Register extends Component {
+    
     state = 
     {
     username: "",
@@ -43,32 +44,35 @@ class Register extends Component {
                 errors: { ...this.state.errors, ...error }
             });
         }
-
-        const { username, email, password } = this.state;
-        try
+        else
         {
-            await Auth.signUp({
-                username,
-                password,
-                attributes:
-                {
-                    email: email
-                }
-            });
+            const { username, email, password } = this.state;
+            try
+            {
+                await Auth.signUp({
+                    username,
+                    password,
+                    attributes:
+                    {
+                        email: email
+                    }
+                });
+    
+                this.props.history.push('/welcome');
+            }
+            catch(error)
+            {
+                let err = null;
+                !error.message ? err = {"message": error} : err = error; /* ensuring error is in proper format */
+                this.setState({
+                    errors:
+                    {
+                        ...this.state.errors, /* preserve current errors */
+                        cognito: err
+                    }
+                })
+            }
 
-            this.props.history.push('/welcome');
-        }
-        catch(error)
-        {
-            let err = null;
-            !error.message ? err = {"message": error} : err = error; /* ensuring error is in proper format */
-            this.setState({
-                errors:
-                {
-                    ...this.state.errors, /* preserve current errors */
-                    cognito: err
-                }
-            })
         }
     };
 
@@ -95,7 +99,7 @@ class Register extends Component {
                     
                     {/* username submit */}
                     <div className = 'formgroup'>
-                        <label for="username">Username</label>
+                        <label htmlFor="username">Username</label>
                         <input 
                         className="input form-control" 
                         type="text"
@@ -109,7 +113,7 @@ class Register extends Component {
 
                     {/* email submit */}
                     <div className = 'formgroup'>
-                        <label for="email">Email</label>
+                        <label htmlFor="email">Email</label>
                         <input 
                         className="input form-control" 
                         type="email"
@@ -119,12 +123,12 @@ class Register extends Component {
                         value={this.state.email}
                         onChange={this.onInputChange}
                         />
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                     </div>
 
                     {/* password submit */}
                     <div className = 'formgroup'>
-                        <label for="password">Password</label>
+                        <label htmlFor="password">Password</label>
                         <input 
                         className="input form-control" 
                         type="password"
@@ -137,7 +141,7 @@ class Register extends Component {
 
                     {/* confirm password submit */}
                     <div className = 'formgroup'>
-                        <label for="confirmpassword">Confirm Password</label>
+                        <label htmlFor="confirmpassword">Confirm Password</label>
                         <input 
                         className="input form-control" 
                         type="password"
