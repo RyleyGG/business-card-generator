@@ -57,6 +57,10 @@ class App extends Component {
             {
                 this.setAdminStatus(true);
             }
+            else
+            {
+                this.setAdminStatus(false);
+            }
 
             this.setAuthStatus(true);
             this.setUser(user);

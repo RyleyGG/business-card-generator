@@ -46,6 +46,7 @@ class Login extends Component {
           const user = await Auth.signIn(this.state.username, this.state.password);
           this.props.authObj.setAuthStatus(true);
           this.props.authObj.setUser(user);
+          window.location.reload(false);
           this.props.history.push('/');
       }
       catch(error)
