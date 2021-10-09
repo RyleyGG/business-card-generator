@@ -53,3 +53,5 @@ package-lock.json
 package.json
 package.json
 amplify/backend
+amplify/hooks/README.md
+amplify/README.md

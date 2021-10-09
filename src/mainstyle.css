@@ -22,3 +22,10 @@ nav, .navbar-collapse, .nav-item
 {
     margin-bottom: 1.55vh;
 }
+
+#buttondiv
+{
+    position: relative;
+    align-items: center;
+    justify-content: center;
+}

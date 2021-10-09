@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import axios from "axios";
-import FormErrors from "./utility/FormErrors";
-import Validate from "./utility/FormValidation";
+import Cropper from 'react-easy-crop';
+import {dataURLtoFile} from './utility/DataURLToFile.js';
+import { getCroppedImg } from './utility/CropImage.js';
+import { ConsoleLogger } from '@aws-amplify/core';
 const $ = require('jquery');
 
 const config = require('../config.json');
@@ -12,8 +14,16 @@ class EditProfile extends Component {
     state =
     {
         "username": this.props.authObj.user.username,
-        "email": this.props.authObj.user.attributes.email
+        "email": this.props.authObj.user.attributes.email,
+        
+        /* props used by the Cropper and Slider components */
+        crop: { x: 0, y: 0 },
+        croppedAreaPixels: null,
+        imageSrc: null,
+        zoom: 1
     }
+        
+        
 
     /* handles form submission */
     handleSubmit = async event => 
@@ -91,10 +101,63 @@ class EditProfile extends Component {
         });
     }
 
+    onCropChange = (crop) =>
+    {
+        this.setState({ crop });
+    }
+    
+    onCropComplete = (croppedArea, croppedAreaPixels) =>
+    {
+        this.setState({ croppedAreaPixels });
+        //console.log(croppedArea, croppedAreaPixels);
+    }
+    
+    onZoomChange = (zoom) =>
+    {
+        this.setState({ zoom });
+    }
+
+
+    onSelectFile = (event) =>
+    {
+        if (event.target.files && event.target.files.length > 0)
+        {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(event.target.files[0]);
+            fileReader.addEventListener('load', () =>
+            {
+                this.setState({imageSrc: fileReader.result});
+                $("#cropperdiv").show();
+                $("#buttondiv").css('display', 'flex');
+            });
+        }
+    }
+
+    onUpload = async (event) =>
+    {
+        let image = document.createElement("img");
+        image.src = this.state.imageSrc;
+        
+
+        //const croppedImage = dataURLtoFile(getCroppedImg(image, this.state.croppedAreaPixels), 'temp.jpg');
+        const croppedImage = getCroppedImg(image, this.state.croppedAreaPixels);
+
+        const downloadElem = document.createElement('a');
+        downloadElem.setAttribute('href', croppedImage);
+        downloadElem.setAttribute('download', 'temp.jpg');
+      
+        downloadElem.style.display = 'none';
+        document.body.appendChild(downloadElem);
+      
+        downloadElem.click();
+      
+        document.body.removeChild(downloadElem);
+    }
+
     render() 
     {
         this.redirectUnauthorizedUsers();
-        
+
         return (
             <section>
 
@@ -109,6 +172,25 @@ class EditProfile extends Component {
                 <p id = 'successText' className = "font-weight-bold text-success" style={{display: 'none'}}></p>
                 <br/>
                 <form onSubmit={this.handleSubmit}>
+
+                {/* Profile picture setup */}
+                <div className='container'>
+                    <input type='file' accept='image/*' onChange={this.onSelectFile}/>
+                    <div className='cropper-container' id='cropperdiv' style={{display: 'none'}}>
+                        <Cropper
+                            image={this.state.imageSrc}
+                            crop={this.state.crop}
+                            zoom={this.state.zoom}
+                            aspect={1}
+                            onCropChange={this.onCropChange}
+                            onCropComplete={this.onCropComplete}
+                            onZoomChange={this.onZoomChange}
+                        />
+                    </div>
+                    <div id = 'buttondiv' style={{display: 'none'}}>
+                        <button className='btn btn-success' id='pfpuploadbtn' type='button' onClick={this.onUpload}>Upload</button>
+                    </div>
+                </div>
 
                 {/* Email input, just for display */}
                 <div className="formgroup" id = 'emailFormGroup' style={{display: 'none'}}>
